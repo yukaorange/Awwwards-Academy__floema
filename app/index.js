@@ -15,11 +15,11 @@ class App {
   constructor() {
     this.createContent();
 
+    this.createCanvas();
+
     this.createPreloader();
 
     this.createNavigation();
-
-    this.createCanvas();
 
     this.createPages();
 
@@ -37,7 +37,9 @@ class App {
   }
 
   createPreloader() {
-    this.preloader = new Preloader();
+    this.preloader = new Preloader({
+      canvas: this.canvas,
+    });
 
     this.preloader.once("completed", () => {
       this.onPreloaded();
@@ -51,7 +53,9 @@ class App {
   }
 
   createCanvas() {
-    this.canvas = new Canvas();
+    this.canvas = new Canvas({
+      template: this.template,
+    });
   }
 
   createPages() {
@@ -76,6 +80,7 @@ class App {
   }
 
   async onChange(url) {
+    this.canvas.onChangeStart();
     await this.page.hide();
 
     const request = await window.fetch(url);
@@ -94,6 +99,8 @@ class App {
       this.navigation.onChange(this.template);
 
       this.content.innerHTML = divContent.innerHTML;
+
+      this.canvas.onChangeEnd(this.template);
 
       this.page = this.pages[this.template];
 
@@ -118,7 +125,7 @@ class App {
     if (this.page && this.page.onResize) {
       this.page.onResize();
     }
-    
+
     window.requestAnimationFrame((_) => {
       if (this.canvas && this.canvas.onResize) {
         this.canvas.onResize();
@@ -204,14 +211,14 @@ class App {
     });
   }
 
-  // Loop
+  // update
   update() {
-    if (this.canvas && this.canvas.update) {
-      this.canvas.update();
-    }
-
     if (this.page && this.page.update) {
       this.page.update();
+    }
+
+    if (this.canvas && this.canvas.update) {
+      this.canvas.update(this.page.scroll);
     }
 
     this.frame = window.requestAnimationFrame(this.update.bind(this));

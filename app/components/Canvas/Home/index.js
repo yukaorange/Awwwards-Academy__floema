@@ -7,6 +7,8 @@ export default class Home {
   constructor({ gl, scene, sizes }) {
     this.gl = gl;
 
+    this.scene = scene;
+
     this.sizes = sizes;
 
     this.group = new Transform();
@@ -16,11 +18,6 @@ export default class Home {
     this.mediasElements = document.querySelectorAll(
       ".home__gallery__media__image"
     );
-
-    this.createGeometry();
-    this.createGallery();
-
-    this.group.setParent(scene);
 
     this.x = {
       current: 0,
@@ -43,6 +40,12 @@ export default class Home {
       x: 0,
       y: 0,
     };
+
+    this.createGeometry();
+    this.createGallery();
+
+    this.group.setParent(this.scene);
+    this.show()
   }
 
   createGeometry() {
@@ -63,6 +66,18 @@ export default class Home {
   }
 
   /**
+   * animate
+   */
+
+  show() {
+    map(this.medias, (media) => media.show());
+  }
+
+  hide() {
+    map(this.medias, (media) => media.hide());
+  }
+
+  /**
    * events
    */
   onResize(event) {
@@ -75,7 +90,7 @@ export default class Home {
         (this.galleryBounds.height / window.innerHeight) * this.sizes.height,
       width: (this.galleryBounds.width / window.innerWidth) * this.sizes.width,
     };
-    //calculates the ratio of the gallery's width to the viewport's width.Multiplying this ratio by this.sizes.width then scales this ratio up to the size of the clip space. The result is the width of the gallery in the clip space.
+    //calculates the ratio of the gallery's width to the viewport's width.Multiplying this ratio by this.sizes.width then scales this ratio up to the size of the webgl viewport space. The result is the width of the gallery in the clip space.
 
     this.scroll.x = this.x.target = 0;
     this.scroll.y = this.y.target = 0;
@@ -193,5 +208,12 @@ export default class Home {
 
       media.update(this.scroll);
     });
+  }
+
+  /**
+   * destroy
+   */
+  destroy() {
+    this.scene.removeChild(this.group);
   }
 }

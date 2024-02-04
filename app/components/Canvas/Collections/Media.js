@@ -31,11 +31,13 @@ export default class Media {
   createTexture() {
     this.texture = new Texture(this.gl);
 
+    const image = this.element.querySelector("img");
+
     this.image = new window.Image();
 
     this.image.crossOrigin = "anonymous";
 
-    this.image.src = this.element.getAttribute("data-src");
+    this.image.src = image.getAttribute("data-src");
 
     this.image.onload = (_) => {
       this.texture.image = this.image;
@@ -60,8 +62,6 @@ export default class Media {
     });
 
     this.mesh.setParent(this.scene);
-
-    this.mesh.rotation.z = GSAP.utils.random(-Math.PI * 0.02, Math.PI * 0.02);
   }
 
   createBounds({ sizes }) {
@@ -117,6 +117,18 @@ export default class Media {
 
     this.mesh.scale.x = this.sizes.width * this.width;
     this.mesh.scale.y = this.sizes.height * this.height;
+
+    const scale = GSAP.utils.mapRange(
+      0,
+      this.sizes.width / 2,
+      0.0,
+      0.0,
+      Math.abs(this.mesh.position.x)
+    );
+
+    this.mesh.scale.x += scale;
+
+    this.mesh.scale.y += scale;
   }
 
   updateX(x = 0) {
@@ -137,13 +149,16 @@ export default class Media {
       this.mesh.scale.y / 2 -
       this.y * this.sizes.height +
       this.extra.y;
+
+    this.mesh.position.y +=
+      Math.sin((this.mesh.position.x / this.sizes.width) * Math.PI * 2) * 0.1;
   }
 
   update(scroll) {
     if (!this.bounds) return; //caz this.update method is ganna be called before finishing createBounds method.
 
-
-    this.updateX(scroll.x);
-    this.updateY(scroll.y);
+    this.updateScale();
+    this.updateX(scroll);
+    this.updateY(0);
   }
 }

@@ -4,9 +4,17 @@ block variables
   - var template = 'collections'
 
 block content
-  .collections(data-background="#C97164" data-color="#37384C")
+  .collections(data-background="#bc978c" data-color="#f9f1e7")
     .collections__wrapper
       .collections__titles
+        each collection,index in collections
+          .collections__titles__label!=`${home.data.collection}<br>${Numbers(index)}`
+          .collections__titles__title=collection.data.title
+
+        each collection,index in collections
+          .collections__titles__label!=`${home.data.collection}<br>${Numbers(index)}`
+          .collections__titles__title=collection.data.title
+
         each collection,index in collections
           .collections__titles__label!=`${home.data.collection}<br>${Numbers(index)}`
           .collections__titles__title=collection.data.title
@@ -14,10 +22,10 @@ block content
 
       .collections__gallery
         .collections__gallery__wrapper
-          each collection in collections
+          each collection,index in collections
             each product in collection.data.products
               a.collections__gallery__link(href=Link(product.products_product))
-                figure.collections__gallery__media
+                figure.collections__gallery__media(data-index=index)
                   img.collections__gallery__media__image(alt=product.products_product.data.image.alt data-src=product.products_product.data.image.url)
 
       .collections__content
