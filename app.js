@@ -40,7 +40,6 @@ const handleLinkResolver = (doc) => {
     return "/about";
   }
 
-  console.log(doc);
   return "/";
 };
 
@@ -110,13 +109,11 @@ const handleRequest = async (api) => {
     });
   });
 
-  console.log("----------------");
-  console.log(assets);
-
   return {
     assets,
     collections,
     home,
+    about,
     meta,
     navigation,
     preloader,
@@ -137,11 +134,8 @@ app.get("/about", async (req, res) => {
   const api = await initApi(req);
   const defaults = await handleRequest(api);
 
-  // console.log(about.data)
-
   res.render("pages/about", {
     ...defaults,
-    about,
   });
 });
 
@@ -151,7 +145,6 @@ app.get("/collections", async (req, res) => {
 
   res.render("pages/collections", {
     ...defaults,
-    collections,
   });
 });
 

@@ -11,7 +11,7 @@ export default class Animation extends Component {
 
     this.createObserver();
 
-    this.animateOut()
+    this.animateOut()//in advance hidden Animation elements.(Call GSAP.set in Super class)
   }
 
   createObserver() {

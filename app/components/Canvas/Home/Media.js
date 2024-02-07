@@ -1,8 +1,8 @@
-import { Mesh, Program, Texture } from "ogl";
+import { Mesh, Program } from "ogl";
 import GSAP from "gsap";
 
-import vertex from "shaders/plane-vertex.glsl";
-import fragment from "shaders/plane-fragment.glsl";
+import vertex from "shaders/home-vertex.glsl";
+import fragment from "shaders/home-fragment.glsl";
 
 export default class Media {
   constructor({ element, geometry, scene, gl, index, sizes }) {
@@ -29,17 +29,9 @@ export default class Media {
   }
 
   createTexture() {
-    this.texture = new Texture(this.gl);
+    const image = this.element;
 
-    this.image = new window.Image();
-
-    this.image.crossOrigin = "anonymous";
-
-    this.image.src = this.element.getAttribute("data-src");
-
-    this.image.onload = (_) => {
-      this.texture.image = this.image;
-    };
+    this.texture = window.TEXTURES[image.getAttribute("data-src")];
   }
 
   createProgram() {
@@ -48,7 +40,9 @@ export default class Media {
       vertex: vertex,
       uniforms: {
         tMap: { value: this.texture },
+        uSpeed: { value: 0 },
         uAlpha: { value: 0 },
+        uViewportSizes: { value: [this.sizes.width, this.sizes.height] },
       },
     });
   }
@@ -83,10 +77,11 @@ export default class Media {
         value: 0,
       },
       {
-        value: 1,
+        value: 0.4,
       }
     );
   }
+
   hide() {
     GSAP.to(this.program.uniforms.uAlpha, {
       value: 0,
@@ -139,11 +134,12 @@ export default class Media {
       this.extra.y;
   }
 
-  update(scroll) {
+  update(scroll, speed) {
     if (!this.bounds) return; //caz this.update method is ganna be called before finishing createBounds method.
-
 
     this.updateX(scroll.x);
     this.updateY(scroll.y);
+
+    this.program.uniforms.uSpeed.value = speed;
   }
 }

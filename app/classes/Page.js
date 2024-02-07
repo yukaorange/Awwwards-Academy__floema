@@ -60,7 +60,7 @@ export default class Page {
 
     this.createAnimations();
 
-    this.createPreloaders();
+    this.createAsyncLoaders();
   }
 
   createAnimations() {
@@ -72,6 +72,7 @@ export default class Page {
         element,
       });
     });
+
     this.animations.push(...this.animationsTitles);
 
     //paragraphs.
@@ -83,6 +84,7 @@ export default class Page {
         });
       }
     );
+
     this.animations.push(...this.animationsParagraphs);
 
     //labels.
@@ -91,6 +93,7 @@ export default class Page {
         element,
       });
     });
+
     this.animations.push(...this.animationsLabels);
 
     //highlights.
@@ -102,10 +105,11 @@ export default class Page {
         });
       }
     );
+
     this.animations.push(...this.animationsHighlights);
   }
 
-  createPreloaders() {
+  createAsyncLoaders() {
     this.preloaders = map(this.elements.preloaders, (element) => {
       return new AsyncLoad({
         element,

@@ -27,6 +27,8 @@ class App {
 
     this.addLinkListeners();
 
+    this.onResize();
+
     this.update();
   }
 
@@ -72,15 +74,16 @@ class App {
   }
 
   onPreloaded() {
-    this.preloader.destroy();
-
     this.onResize();
+
+    this.canvas.onPreloaded();
 
     this.page.show();
   }
 
   async onChange(url) {
-    this.canvas.onChangeStart();
+    this.canvas.onChangeStart(this.template, url);
+
     await this.page.hide();
 
     const request = await window.fetch(url);
@@ -88,8 +91,12 @@ class App {
     if (request.status === 200) {
       const html = await request.text();
 
+      window.history.pushState({}, "", url);
+
       const div = document.createElement("div");
+      
       div.innerHTML = html;
+
       const divContent = div.querySelector(".content");
 
       this.template = divContent.getAttribute("data-template");

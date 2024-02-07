@@ -6,6 +6,7 @@ import prefix from "prefix";
 
 export default class Collections {
   constructor({ gl, scene, sizes }) {
+    this.id = "collections"
     this.gl = gl;
     this.scene = scene;
     this.sizes = sizes;
@@ -114,10 +115,10 @@ export default class Collections {
    * change
    */
   onChange(index) {
-    this.index = index;
+    this.index = index; //count up by scroll.0 => 1 => 2 => ...
 
     const selectedCollection = parseInt(
-      this.mediasElements[this.index].getAttribute("data-index")
+      this.mediasElements[this.index].getAttribute("data-index") //pickup the index from media's data-index.
     );
 
     map(this.collectionsElements, (element, elementIndex) => {
@@ -127,8 +128,6 @@ export default class Collections {
         element.classList.remove(this.collectionsElementsActive);
       }
     });
-
-    console.log(selectedCollection);
 
     this.titlesElement.style[this.prefixTransform] = `translateY(-${
       25 * selectedCollection
@@ -165,17 +164,17 @@ export default class Collections {
 
     this.scroll.last = this.scroll.current;
 
-    map(this.medias, (media, index) => {
-      media.update(this.scroll.current);
-    });
-
     const index = Math.floor(
-      Math.abs(this.scroll.current / this.scroll.limit) * this.medias.length
+      Math.abs(this.scroll.current / this.scroll.limit) * this.medias.length //this.scroll.current / this.scroll.limit is 0-1. (ex: medias.length = 10, then index is 0-9)
     );
 
     if (this.index !== index) {
       this.onChange(index);
     }
+
+    map(this.medias, (media) => {
+      media.update(this.scroll.current, this.index);
+    });
   }
 
   /**

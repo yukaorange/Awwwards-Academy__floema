@@ -1,7 +1,7 @@
 import Animation from "../classes/Animation";
 import GSAP from "gsap";
-import { calculate, split } from "../utils/text";
-import each from "lodash/each";
+// import { calculate, split } from "../utils/text";
+// import each from "lodash/each";
 
 export default class Highlight extends Animation {
   constructor({ element, elements }) {
@@ -15,13 +15,10 @@ export default class Highlight extends Animation {
       this.element,
       {
         autoAlpha: 0,
-        scale: 1.2,
+        delay: 0.5,
       },
       {
         autoAlpha: 1,
-        scale: 1,
-        duration: 1.5,
-        ease: "expo.out",
       },
       "0"
     );
@@ -33,6 +30,5 @@ export default class Highlight extends Animation {
     });
   }
 
-  onResize() {
-  }
+  onResize() {}
 }
