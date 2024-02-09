@@ -42,11 +42,10 @@ export default class Collections {
       velocity: 1,
     };
 
-
     this.createGeometry();
     this.createGallery();
     this.onResize({
-      sizes:this.sizes
+      sizes: this.sizes,
     });
 
     this.group.setParent(this.scene);
@@ -141,6 +140,8 @@ export default class Collections {
     this.titlesElement.style[this.prefixTransform] = `translateY(-${
       25 * selectedCollection
     }%) translate(-50%,-50%) rotate(-90deg)`;
+
+    this.media = this.medias[this.index]
   }
 
   /**
@@ -173,8 +174,11 @@ export default class Collections {
 
     this.scroll.last = this.scroll.current;
 
+    let substract = this.medias[0].bounds.width / 2; //make the scroll.current to be next index when it's over the half of the media's width.
+
     const index = Math.floor(
-      Math.abs(this.scroll.current / this.scroll.limit) * this.medias.length //this.scroll.current / this.scroll.limit is 0-1. (ex: medias.length = 10, then index is 0-9)
+      Math.abs((this.scroll.current - substract) / this.scroll.limit) *
+        (this.medias.length - 1) //this.scroll.current / this.scroll.limit is 0-1. (ex: medias.length = 11, then index is 0-10)
     );
 
     if (this.index !== index) {

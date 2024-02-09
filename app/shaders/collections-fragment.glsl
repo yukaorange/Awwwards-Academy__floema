@@ -11,6 +11,6 @@ void main() {
 
   gl_FragColor = texture;
 
-  gl_FragColor.a = (1.0 - abs(vPosition.x * .5)) * uAlpha;
+  gl_FragColor.a = (1.0 - abs(vPosition.x * 1. / 6.)) * uAlpha;
 
 }

@@ -44,21 +44,17 @@ export default class Transition {
 
     this.mesh.position.x = mesh.position.x;
     this.mesh.position.y = mesh.position.y;
-    this.mesh.position.z = mesh.position.z;
+    this.mesh.position.z = mesh.position.z + 0.01;
 
     this.mesh.setParent(this.scene);
-
-    console.log(this.mesh)
   }
 
   /**
    * element
    */
   setElement(element) {
-    console.log(element.id);
 
     if (element.id === "collections") {
-
       const { index, medias } = element;
 
       const media = medias[index];

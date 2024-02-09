@@ -127,6 +127,9 @@ export default class Canvas {
   }
 
   onChangeStart(template, url) {
+
+    this.template = template;
+
     if (this.home) {
       this.home.hide();
     }
@@ -159,11 +162,6 @@ export default class Canvas {
 
   onChangeEnd(template) {
     if (template == "home") {
-      if (this.home && this.home.group.children) {
-        //from home to home. medias remains viewport.
-        //So, destroy previous medias.
-        this.destroyHome();
-      }
       this.createHome();
     } else {
       this.destroyHome();

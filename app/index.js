@@ -73,6 +73,9 @@ class App {
     this.page.create();
   }
 
+  /**
+   * event
+   */
   onPreloaded() {
     this.onResize();
 
@@ -81,7 +84,31 @@ class App {
     this.page.show();
   }
 
-  async onChange(url) {
+  onPopState() {
+    this.onChange({
+      url: window.location.pathname,
+      push: false,
+    });
+  }
+
+  async onChange({ url, push = true }) {
+    const currentPath = window.location.pathname;
+
+    const rootPath = "/";
+
+    const clickedPath = new URL(url, window.location.origin).pathname;
+
+    if (currentPath === rootPath && clickedPath === rootPath) {
+      console.log("return");
+      return;
+    }
+
+    if (this.onChanging) {
+      return; //I'm worrying that this method is gonna be called multiplex times and is's bring some trouble for the user interface.
+    }
+
+    this.onChanging = true;
+
     this.canvas.onChangeStart(this.template, url);
 
     await this.page.hide();
@@ -91,10 +118,12 @@ class App {
     if (request.status === 200) {
       const html = await request.text();
 
-      window.history.pushState({}, "", url);
-
       const div = document.createElement("div");
-      
+
+      if (push) {
+        window.history.pushState({}, "", url);
+      }
+
       div.innerHTML = html;
 
       const divContent = div.querySelector(".content");
@@ -118,8 +147,12 @@ class App {
       this.page.show();
 
       this.addLinkListeners(); //q I'm worrying that this method is called multiplex times and it's not necessary to call it again and again.Just it's gonna make trouble for the browser.
+
+      this.onChanging = false;
     } else {
       console.log("error");
+
+      this.onChanging = false;
     }
   }
 
@@ -178,13 +211,18 @@ class App {
         const { href } = link;
 
         event.preventDefault();
-        this.onChange(href);
+
+        this.onChange({ url: href });
       };
     });
   }
 
   // Listeners
   addEventListeners() {
+    window.addEventListener("popstate", (event) => {
+      this.onPopState(event);
+    });
+
     window.addEventListener("mousedown", (event) => {
       this.onTouchDown(event);
     });
