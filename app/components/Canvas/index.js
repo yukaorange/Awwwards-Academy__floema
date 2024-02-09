@@ -90,6 +90,7 @@ export default class Canvas {
       gl: this.gl,
       scene: this.scene,
       sizes: this.sizes,
+      transition: this.transition,
     });
   }
 

@@ -72,6 +72,10 @@ export default class Detail {
       this.transition.animate(this.mesh, (_) => {
         this.program.uniforms.uAlpha.value = 1;
       });
+    } else {
+      GSAP.to(this.program.uniforms.uAlpha, {
+        value: 1,
+      });
     }
   }
 
@@ -135,13 +139,16 @@ export default class Detail {
   }
 
   update() {
-    if (!this.bounds) return; //caz this.update method is ganna be called before finishing createBounds method.
+    // if (!this.bounds) return; //caz this.update method is ganna be called before finishing createBounds method.
 
     this.updateX();
     this.updateY();
   }
 
+  /**
+   * destroy
+   */
   destroy() {
-    this.scene.removChild(this.mesh);
+    this.scene.removeChild(this.mesh);
   }
 }

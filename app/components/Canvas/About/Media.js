@@ -18,11 +18,17 @@ export default class Media {
 
     this.index = index;
 
+    this.extra = 0;
+
     this.createTexture();
     this.createProgram();
     this.createMesh();
 
-    this.extra = 0;
+
+    this.createBounds({
+      sizes: this.sizes,
+    });
+
   }
 
   createTexture() {
@@ -159,7 +165,7 @@ export default class Media {
   }
 
   update(scroll) {
-    if (!this.bounds) return; //caz this.update method is ganna be called before finishing createBounds method.
+    // if (!this.bounds) return; //caz this.update method is ganna be called before finishing createBounds method.
 
     this.updateRotation();
     this.updateScale();

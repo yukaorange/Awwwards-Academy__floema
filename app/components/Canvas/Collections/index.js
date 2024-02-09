@@ -5,11 +5,12 @@ import Media from "./Media";
 import prefix from "prefix";
 
 export default class Collections {
-  constructor({ gl, scene, sizes }) {
-    this.id = "collections"
+  constructor({ gl, scene, sizes, transition }) {
+    this.id = "collections";
     this.gl = gl;
     this.scene = scene;
     this.sizes = sizes;
+    this.transition = transition;
 
     this.prefixTransform = prefix("transform");
 
@@ -41,8 +42,12 @@ export default class Collections {
       velocity: 1,
     };
 
+
     this.createGeometry();
     this.createGallery();
+    this.onResize({
+      sizes:this.sizes
+    });
 
     this.group.setParent(this.scene);
     this.show();
@@ -71,6 +76,10 @@ export default class Collections {
 
   show() {
     map(this.medias, (media) => media.show());
+
+    if (this.transition) {
+      this.transition.animate(this.medias[0].mesh, (_) => {});
+    }
   }
 
   hide() {
@@ -138,7 +147,7 @@ export default class Collections {
    * update
    */
   update() {
-    if (!this.bounds) return;
+    // if (!this.bounds) return;
 
     this.scroll.target = GSAP.utils.clamp(
       -this.scroll.limit,

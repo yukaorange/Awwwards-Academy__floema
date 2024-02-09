@@ -14,6 +14,10 @@ export default class About {
     this.createGeometry();
     this.createGalleries();
 
+    this.onResize({
+      sizes: this.sizes,
+    });
+
     this.group.setParent(scene);
 
     this.show();
@@ -43,7 +47,7 @@ export default class About {
   show() {
     map(this.galleries, (gallery) => gallery.show());
   }
-  
+
   hide() {
     map(this.galleries, (gallery) => gallery.hide());
   }

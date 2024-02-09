@@ -26,7 +26,6 @@ export default class Page {
     };
 
     this.transformPrefix = Prefix("transform");
-
   }
 
   create() {
@@ -120,25 +119,29 @@ export default class Page {
   /**
    * animations
    */
-  show() {
+  show(animation) {
     return new Promise((resolve) => {
       ColorsManager.change({
         backgroundColor: this.element.getAttribute("data-background"),
         color: this.element.getAttribute("data-color"),
       });
 
-      this.animationIn = GSAP.timeline();
+      if (animation) {
+        this.animationIn = animation;
+      } else {
+        this.animationIn = GSAP.timeline();
 
-      this.animationIn.fromTo(
-        this.element,
-        {
-          autoAlpha: 0,
-        },
-        {
-          autoAlpha: 1,
-          onComplete: resolve,
-        }
-      );
+        this.animationIn.fromTo(
+          this.element,
+          {
+            autoAlpha: 0,
+          },
+          {
+            autoAlpha: 1,
+            onComplete: resolve,
+          }
+        );
+      }
 
       this.animationIn.call((_) => {
         this.addEventListeners();
@@ -215,9 +218,7 @@ export default class Page {
   /**
    * listeners
    */
-  addEventListeners() {
-  }
+  addEventListeners() {}
 
-  removeEventListeners() {
-  }
+  removeEventListeners() {}
 }
