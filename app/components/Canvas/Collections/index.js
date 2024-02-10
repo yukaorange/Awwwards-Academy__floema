@@ -11,6 +11,7 @@ export default class Collections {
     this.scene = scene;
     this.sizes = sizes;
     this.transition = transition;
+    this.media = null;
 
     this.prefixTransform = prefix("transform");
 
@@ -43,12 +44,15 @@ export default class Collections {
     };
 
     this.createGeometry();
+
     this.createGallery();
+
     this.onResize({
       sizes: this.sizes,
     });
 
     this.group.setParent(this.scene);
+
     this.show();
   }
 
@@ -73,11 +77,53 @@ export default class Collections {
    * animate
    */
 
-  show() {
-    map(this.medias, (media) => media.show());
-
+  async show() {
     if (this.transition) {
-      this.transition.animate(this.medias[0].mesh, (_) => {});
+      const { src } = this.transition.mesh.program.uniforms.tMap.value.image;
+
+      const texture = window.TEXTURES[src];
+
+      const media = this.medias.find((media) => {
+        return media.texture === texture;
+      });
+
+      const scroll = -(
+        media.bounds.left +
+        media.bounds.width / 2 -
+        window.innerWidth / 2
+      );
+
+      this.update(); //Actually , this is why gallery mesh rotation update.
+
+      this.transition.animate(
+        {
+          rotation: media.mesh.rotation,
+          position: {
+            //when from detail to collections,mesh position.x will change in ...onComplete function(calculate scroll amount) => update.
+            x: 0,
+            y: media.mesh.position.y,
+            z: 0,
+          },
+          scale: media.mesh.scale,
+        },
+        (_) => {
+          map(this.medias, (item) => {
+            if (media !== item) {
+              item.show();
+            }
+
+            media.opacity.multiplier = 1;
+
+            this.scroll.current =
+              this.scroll.target =
+              this.scroll.start =
+              this.scroll.last =
+                scroll;
+          });
+        }
+      );
+    } else {
+      map(this.medias, (media) => media.show());
     }
   }
 
@@ -103,16 +149,22 @@ export default class Collections {
   }
 
   onTouchDown({ x, y }) {
+    this.isDown = true;
+
     this.scroll.last = this.scroll.current;
   }
 
   onTouchMove({ x, y }) {
     let distance = x.start - x.end;
 
-    this.scroll.target = this.scroll.last - distance;
+    if (this.isDown) {
+      this.scroll.target = this.scroll.last - distance * 0.1;
+    }
   }
 
-  onTouchUp({ x, y }) {}
+  onTouchUp({ x, y }) {
+    this.isDown = false;
+  }
 
   onWheel({ pixelX, pixelY }) {
     // this.scroll.target -= pixelX;
@@ -138,10 +190,8 @@ export default class Collections {
     });
 
     this.titlesElement.style[this.prefixTransform] = `translateY(-${
-      25 * selectedCollection
+      100 * selectedCollection
     }%) translate(-50%,-50%) rotate(-90deg)`;
-
-    this.media = this.medias[this.index]
   }
 
   /**

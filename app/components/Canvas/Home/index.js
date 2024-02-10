@@ -31,7 +31,7 @@ export default class Home {
       lerp: 0.1,
     };
 
-    this.scrollCurrent = {
+    this.scrollCurrent = {//this is necessary to memolize touchstart position.
       x: 0,
       y: 0,
     };

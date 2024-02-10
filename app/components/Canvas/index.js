@@ -127,7 +127,6 @@ export default class Canvas {
   }
 
   onChangeStart(template, url) {
-
     this.template = template;
 
     if (this.home) {
@@ -136,6 +135,10 @@ export default class Canvas {
 
     if (this.collections) {
       this.collections.hide();
+    }
+
+    if (this.detail) {
+      this.detail.hide();
     }
 
     if (this.about) {
@@ -162,6 +165,9 @@ export default class Canvas {
 
   onChangeEnd(template) {
     if (template == "home") {
+      if (this.home) {
+        this.destroyHome();
+      }
       this.createHome();
     } else {
       this.destroyHome();

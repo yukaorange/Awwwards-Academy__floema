@@ -92,16 +92,6 @@ class App {
   }
 
   async onChange({ url, push = true }) {
-    const currentPath = window.location.pathname;
-
-    const rootPath = "/";
-
-    const clickedPath = new URL(url, window.location.origin).pathname;
-
-    if (currentPath === rootPath && clickedPath === rootPath) {
-      console.log("return");
-      return;
-    }
 
     if (this.onChanging) {
       return; //I'm worrying that this method is gonna be called multiplex times and is's bring some trouble for the user interface.

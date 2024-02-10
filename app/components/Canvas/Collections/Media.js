@@ -89,6 +89,7 @@ export default class Media {
       }
     );
   }
+  
   hide() {
     GSAP.to(this.opacity, {
       multiplier: 0,
