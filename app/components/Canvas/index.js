@@ -159,7 +159,7 @@ export default class Canvas {
         url: url,
       });
 
-      this.transition.setElement(this.collections || this.detail);
+      this.transition.setElement(this.collections || this.detail); //if current page is collections, set this.collections.Another case , if current page is detail , set this.detail.
     }
   }
 
@@ -328,6 +328,8 @@ export default class Canvas {
 
   onWheel({ pixelX, pixelY }) {
     if (this.collections) {
+      // if (this.transition && this.transition.isTransitioning) return;
+
       this.collections.onWheel({ pixelX, pixelY });
     }
 

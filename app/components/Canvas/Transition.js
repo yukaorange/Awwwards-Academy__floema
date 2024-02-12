@@ -66,13 +66,13 @@ export default class Transition {
 
       this.createMesh(media.mesh);
 
-      this.transition = "detail";
+      // this.transition = "detail";//no use
     } else {
       this.createProgram(element.texture);
 
       this.createMesh(element.mesh);
 
-      this.transition = "collections";
+      // this.transition = "collections";/no use
     }
   }
 
@@ -81,12 +81,14 @@ export default class Transition {
    */
 
   animate(element, onComplete) {
+    this.isTransitioning = true; //scroll stopper
+
     const timeline = GSAP.timeline();
 
     timeline.to(
       this.mesh.scale,
       {
-        duration: 1.5,
+        duration: 0.5,
         ease: "expo-inOut",
         x: element.scale.x,
         y: element.scale.y,
@@ -98,7 +100,7 @@ export default class Transition {
     timeline.to(
       this.mesh.position,
       {
-        duration: 1.5,
+        duration: 0.5,
         ease: "expo-inOut",
         x: element.position.x,
         y: element.position.y,
@@ -110,7 +112,7 @@ export default class Transition {
     timeline.to(
       this.mesh.rotation,
       {
-        duration: 1.5,
+        duration: 0.5,
         ease: "expo-inOut",
         x: element.rotation.x,
         y: element.rotation.y,
@@ -126,6 +128,7 @@ export default class Transition {
     timeline.call(
       () => {
         this.scene.removeChild(this.mesh);
+        this.isTransitioning = false; //cancel scroll stopper
       },
       null,
       "+=0.5"

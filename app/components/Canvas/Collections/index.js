@@ -87,7 +87,7 @@ export default class Collections {
         return media.texture === texture;
       });
 
-      const scroll = -(
+      const scrollposition = -(
         media.bounds.left +
         media.bounds.width / 2 -
         window.innerWidth / 2
@@ -118,7 +118,7 @@ export default class Collections {
               this.scroll.target =
               this.scroll.start =
               this.scroll.last =
-                scroll;
+                scrollposition;
           });
         }
       );
@@ -175,7 +175,7 @@ export default class Collections {
    * change
    */
   onChange(index) {
-    this.index = index; //count up by scroll.0 => 1 => 2 => ...
+    this.index = index; //count up by scroll. 0 => 1 => 2 => ...
 
     const selectedCollection = parseInt(
       this.mediasElements[this.index].getAttribute("data-index") //pickup the index from media's data-index.
@@ -226,9 +226,14 @@ export default class Collections {
 
     let substract = this.medias[0].bounds.width / 2; //make the scroll.current to be next index when it's over the half of the media's width.
 
+    let normalize = Math.abs(
+      (this.scroll.current - substract) / this.scroll.limit
+    );
+
+    let suitableLength = this.medias.length - 1;
+
     const index = Math.floor(
-      Math.abs((this.scroll.current - substract) / this.scroll.limit) *
-        (this.medias.length - 1) //this.scroll.current / this.scroll.limit is 0-1. (ex: medias.length = 11, then index is 0-10)
+      normalize * suitableLength //this.scroll.current / this.scroll.limit is 0-1. (ex: medias.length = 11, then index is 0-10)
     );
 
     if (this.index !== index) {

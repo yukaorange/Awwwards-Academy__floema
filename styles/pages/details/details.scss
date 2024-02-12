@@ -9,6 +9,11 @@
     height: auto;
   }
 }
+
+.content[data-template="detail"] {
+  overflow-y: scroll;
+}
+
 .detail__wrapper {
   align-items: center;
   display: flex;
@@ -40,6 +45,21 @@
   padding-left: 8.2rem;
   @include media("<=phone") {
     padding-left: 0;
+    position: relative;
+    z-index: 0;
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      margin-right: calc(50% - 50vw);
+      margin-left: calc(50% - 50vw);
+      width: 100vw;
+      height: calc(100% + 10rem);
+      background-color: #5e5e5e59;
+      top: -5rem;
+      bottom: -5rem;
+      left: 0;
+    }
   }
 }
 

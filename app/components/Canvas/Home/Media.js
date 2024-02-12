@@ -102,6 +102,11 @@ export default class Media {
 
     this.createBounds(sizes);
 
+    this.program.uniforms.uViewportSizes.value = [
+      this.sizes.width,
+      this.sizes.height,
+    ];
+
     this.updateX(scroll && scroll.x);
     this.updateY(scroll && scroll.y);
   }
